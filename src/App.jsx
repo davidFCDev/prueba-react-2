@@ -3,11 +3,10 @@ import "./App.css";
 import { Movies } from "./components/Movies";
 import responseMovies from "./mocks/results.json";
 
-function App() {
+function useSearch() {
   const [search, updateSearch] = useState("");
   const [error, setError] = useState(null);
   const isFirstInput = useRef(true);
-  const movies = responseMovies.Search;
 
   useEffect(() => {
     if (isFirstInput.current) {
@@ -27,6 +26,13 @@ function App() {
 
     setError(false);
   }, [search, isFirstInput]);
+
+  return { search, updateSearch, error };
+}
+
+function App() {
+  const { search, updateSearch, error } = useSearch();
+  const movies = responseMovies.Search;
 
   const mappedMovies = movies.map((movie) => {
     return {
@@ -64,7 +70,7 @@ function App() {
       </header>
 
       <main>
-        {loading ? <p>Loading...</p> : <Movies movies={mappedMovies} />}
+        {/* {loading ? <p>Loading...</p> : <Movies movies={mappedMovies} />} */}
       </main>
     </div>
   );
