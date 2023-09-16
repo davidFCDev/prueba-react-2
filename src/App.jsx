@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./App.css";
 import { Movies } from "./components/Movies";
 import responseMovies from "./mocks/results.json";
@@ -6,8 +6,27 @@ import responseMovies from "./mocks/results.json";
 function App() {
   const [search, updateSearch] = useState("");
   const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const isFirstInput = useRef(true);
   const movies = responseMovies.Search;
+
+  useEffect(() => {
+    if (isFirstInput.current) {
+      isFirstInput.current = search === "";
+      return;
+    }
+
+    if (search === "") {
+      setError("La búsqueda no puede estar vacía");
+      return;
+    }
+
+    if (search.length < 3) {
+      setError("La búsqueda debe tener al menos 3 caracteres");
+      return;
+    }
+
+    setError(false);
+  }, [search, isFirstInput]);
 
   const mappedMovies = movies.map((movie) => {
     return {
